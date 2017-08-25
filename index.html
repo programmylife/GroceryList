@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GroceryList</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="wrapper">
+    <h2>Grocery List</h2>
+    <p></p>
+    <ul class="plates">
+      <li>Loading Tapas...</li>
+    </ul>
+    <form class="add-items">
+      <input type="text" name="item" placeholder="Item Name" required>
+      <input type="submit" value="+ Add Item">
+    </form>
+    <input class="remove-items" type="submit" value="Remove Checked Items">
+    <p></p>
+    <input class="done-shopping" type="submit" value="Done Shopping">
+    <p></p>
+    <input class="submit-to-db" type="submit" value="Submit To DB">
+  </div>
+
+<script>
+  const addItems = document.querySelector('.add-items');
+  const removeItemsButton = document.querySelector('.remove-items');
+  const doneShoppingButton = document.querySelector('.done-shopping');
+  const submitToDBButton = document.querySelector('.submit-to-db');
+  const itemsList = document.querySelector('.plates');
+  var items = JSON.parse(localStorage.getItem('items')) || []; //try to get from local storage, or make it empty
+
+  function addItem(e) {
+    e.preventDefault();  //prevent page from reloading
+    const text = (this.querySelector('[name=item]')).value;
+    const item = {
+      text,
+      done: false
+    };
+
+    items.push(item);
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items));
+    this.reset();
+  }
+
+  function doneShopping() {
+    console.log("NotImplementedYet");
+  }
+
+  function submitToDB() {
+    console.log("NotImplementedYet");
+  }
+
+  function moveItemUpInList(button) {
+    const index = parseInt(button.dataset.index);
+    if(index === 0) return; //don't do anything if it is already the top item
+    swapTwoListItems(index, index-1)
+
+  }
+
+  function moveItemDownInList(button) {
+    const index = parseInt(button.dataset.index);
+    if(index === items.length-1) return; //don't do anything if it is the last item
+    swapTwoListItems(index, index+1);
+  }
+
+  function swapTwoListItems(a, b){
+    var temp = items[b];
+    items[b] = items[a];
+    items[a] = temp;
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+
+  }
+
+  function removeItemsFromList() {
+    //get a list of items not marked done
+    var uncheckedItems = items.filter(function(item)
+    {
+      return !item.done;
+    });
+    if(uncheckedItems.length != items.length)
+    {
+      items = uncheckedItems;
+      localStorage.setItem('items', JSON.stringify(items));
+      populateList(items, itemsList);
+    }
+  }
+
+  function populateList(plates = [], platesList) {
+    platesList.innerHTML = plates.map((plate, i) => {
+      return `
+        <li>
+          <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
+          <label for="item${i}">${plate.text}</label>
+          <input type="button" data-index=${i} onclick=moveItemUpInList(this) value="Up">
+          <input type="button" data-index=${i} onclick=moveItemDownInList(this) value="Down">
+        </li>
+      `;
+    }).join('');
+  }
+
+  function toggleDone(e) {
+    if (e.target.type != 'checkbox') return; // skip this unless it's an input
+    const el = e.target;
+    const index = el.dataset.index;
+    items[index].done = !items[index].done;
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+
+  addItems.addEventListener('submit', addItem);
+  removeItemsButton.addEventListener('click', removeItemsFromList);
+  doneShoppingButton.addEventListener('click', doneShopping);
+  submitToDBButton.addEventListener('click', submitToDB);
+  itemsList.addEventListener('click', toggleDone);
+
+  populateList(items, itemsList);
+
+</script>
+
+
+</body>
+</html>
