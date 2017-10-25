@@ -24,9 +24,6 @@
     <input class="submit-to-db" type="submit" value="Submit To DB">
   </div>
 
-  <script  src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
-
-</script>
 <script>
   const addItems = document.querySelector('.add-items');
   const removeItemsButton = document.querySelector('.remove-items');
@@ -56,7 +53,6 @@
                 done: false,
                 ListGUID: 'latest'
               };
-              //returnList.push(item);
               addItemToListAndLocalStorage(item)
       }
     }).catch(function(err) {
@@ -64,12 +60,8 @@
       Error :('error, yo')
     });
 
-    //console.log(JSON.parse(localStorage.getItem('items')));
-    console.log(returnList);
-
-//TODO: THIS ISn't how this should work...
-      return [];// returnList;// || JSON.parse(localStorage.getItem('items')) ||  [];
-
+    //TODO: This isn't how this should work...
+    return [];// returnList;// || JSON.parse(localStorage.getItem('items')) ||  [];
   }
 
   function addItemFromField(e) {
@@ -81,17 +73,14 @@
       done: false,
       ListGUID: 'latest'
     };
-        //   items.push(item);
-        //   localStorage.setItem('items', JSON.stringify(items));
-        // populateList(items, itemsList);
     addItemToListAndLocalStorage(item);
     this.reset();
   }
 
   function addItemToListAndLocalStorage(item){
-        items.push(item);
-        localStorage.setItem('items', JSON.stringify(items));
-      populateList(items, itemsList);
+    items.push(item);
+    localStorage.setItem('items', JSON.stringify(items));
+    populateList(items, itemsList);
   }
 
   function doneShopping() {
@@ -105,12 +94,10 @@
       dataType: 'json',
       body: JSON.stringify(items)
     });
-
     fetch(request);
   }
 
   function submitToDB() {
-
     var request = new Request('http://127.0.0.1:5000/postList',
     {
       method: 'POST',mode: 'no-cors',
@@ -120,7 +107,6 @@
       dataType: 'json',
       body: JSON.stringify(items)
     });
-
     fetch(request);
   }
 
@@ -128,7 +114,6 @@
     const index = parseInt(button.dataset.index);
     if(index === 0) return; //don't do anything if it is already the top item
     swapTwoListItems(index, index-1)
-
   }
 
   function moveItemDownInList(button) {
@@ -143,7 +128,6 @@
     items[a] = temp;
     localStorage.setItem('items', JSON.stringify(items));
     populateList(items, itemsList);
-
   }
 
   function removeItemsFromList() {
@@ -187,11 +171,6 @@
   doneShoppingButton.addEventListener('click', doneShopping);
   submitToDBButton.addEventListener('click', submitToDB);
   itemsList.addEventListener('click', toggleDone);
-
-  //getLatestList(); //try to get latest list; if null, set to empty
-  console.log(items);
-  console.log(itemsList);
-  //populateList(items, itemsList);
 
 </script>
 
