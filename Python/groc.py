@@ -11,43 +11,45 @@ app = Flask(__name__)
 CORS(app)
 
 def initialize_db():
-    client = boto3.client('dynamodb')
+    client = boto3.client('dynamodb', region_name='us-east-1')
     return client
 
 @app.route('/doneShopping', methods=['POST'])
 def done_shopping():
+    response = '';
     if request.method == 'POST':
         #Can't get flask to recognize JSON data from fetch, so I'm getting it as a string, then parsing.
         #json_data = request.get_json() doesn't seem to work even when sending sample JSON of {'foo':'bar'}
 
         json_items = json.loads(request.data)
-        create_new_list(initialize_db(), str(uuid.uuid4()), create_list_from_front_end(json_items), datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+        response = create_new_list(initialize_db(), str(uuid.uuid4()), create_list_from_front_end(json_items), datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
 
-    return ''
+    return jsonify(response['ResponseMetadata'])
 
 @app.route('/postList', methods=['POST'])
 def post_list():
+    response = '';
     if request.method == 'POST':
         json_items = json.loads(request.data)
-        print (json_items)
 
         #if no GUID, make one, and create a new list in the DB with it.
         #This shouldn't really happen since all should be 'latest' or have a real GUID...
         if json_items[0]["ListGUID"] == '':
             print "NO GUID"
             newGUID = 'latest'
-            create_new_list(initialize_db(), newGUID, create_list_from_front_end(json_items),'null')
+            response = create_new_list(initialize_db(), newGUID, create_list_from_front_end(json_items),'null')
 
         elif json_items[0]["ListGUID"] == 'latest':
             print "latest GUID"
-            update_list(initialize_db(), create_list_from_front_end(json_items) )
+            response = update_list(initialize_db(), create_list_from_front_end(json_items) )
 
         else:
             #not sure what to do in this case
             print 'real guid?'
 
+    print response['ResponseMetadata']
     #Is there something better I should return?
-    return ""
+    return jsonify(response['ResponseMetadata'])
 
 @app.route('/getLatest')
 def get_latest_list():
@@ -88,7 +90,7 @@ def create_new_list(client, id, items, shop_date):
             },
         }
     )
-    print response
+    return response
 
 def create_list_from_front_end(items):
     item_list = [];
@@ -119,4 +121,5 @@ def update_list(client, items):
         UpdateExpression='SET #L = :l',
     )
 
-    print response
+    return response
+

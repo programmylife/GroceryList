@@ -10,8 +10,8 @@
   <div class="wrapper">
     <h2>Grocery List</h2>
     <p></p>
-    <ul class="plates">
-      <li>Loading Tapas...</li>
+    <ul class="items">
+      <li>Loading Groceries...</li>
     </ul>
     <form class="add-items">
       <input type="text" name="item" placeholder="Item Name" required>
@@ -19,9 +19,9 @@
     </form>
     <input class="remove-items" type="submit" value="Remove Checked Items">
     <p></p>
-    <input class="done-shopping" type="submit" value="Done Shopping">
+    <input class="submit-to-db" type="submit" value="Save To Database">
     <p></p>
-    <input class="submit-to-db" type="submit" value="Submit To DB">
+    <input class="done-shopping" type="submit" value="Done Shopping">
   </div>
 
 <script>
@@ -29,16 +29,19 @@
   const removeItemsButton = document.querySelector('.remove-items');
   const doneShoppingButton = document.querySelector('.done-shopping');
   const submitToDBButton = document.querySelector('.submit-to-db');
-  const itemsList = document.querySelector('.plates');
+  const itemsList = document.querySelector('.items');
+  const urlRemote = '';
+  const urlLocal = 'http://127.0.0.1:5000/';
 
-  var GUID_int;
+  //for debug, change to local
+  const curURL = urlRemote;
+
   let items = [];
-  getLatestList();//JSON.parse(localStorage.getItem('items')) || [];
+  getLatestList();
 
   function getLatestList(){
     let returnList =[];
-
-    let request = new Request('http://127.0.0.1:5000/getLatest',
+    let request = new Request(curURL+'getLatest',
     {method:'get'});
 
     fetch(request).then(function(response) {
@@ -57,7 +60,7 @@
       }
     }).catch(function(err) {
       //todo: this doesn't seem to work...
-      Error :('error, yo')
+      Error :('error')
     });
 
     //TODO: This isn't how this should work...
@@ -66,7 +69,6 @@
 
   function addItemFromField(e) {
     e.preventDefault();  //prevent page from reloading
-    console.log("asjdfhajkla");
     const text = (this.querySelector('[name=item]')).value;
     const item = {
       text,
@@ -84,30 +86,47 @@
   }
 
   function doneShopping() {
-    console.log("Done Shopping");
-    var request = new Request('http://127.0.0.1:5000/doneShopping',
+    var request = new Request(curURL+'doneShopping',
     {
-      method: 'POST',mode: 'no-cors',
+      method: 'POST',
       headers: new Headers({
     		"content-type":"application/json"
     	}),
       dataType: 'json',
       body: JSON.stringify(items)
     });
-    fetch(request);
+
+    fetch(request).then(function(response) {
+      console.log(response);
+      if(response.ok) {
+        alert ("Done shopping!");
+        return response.json();
+      }
+     }).catch(function(err) {
+      alert(err);
+    });
   }
 
-  function submitToDB() {
-    var request = new Request('http://127.0.0.1:5000/postList',
+  function saveToDB() {
+    var request = new Request(curURL+'postList',
     {
-      method: 'POST',mode: 'no-cors',
+      method: 'POST',
       headers: new Headers({
     		"content-type":"application/json"
     	}),
       dataType: 'json',
       body: JSON.stringify(items)
     });
-    fetch(request);
+
+    fetch(request).then(function(response) {
+      console.log(response);
+      if(response.ok) {
+        alert ("Saved!");
+        return response.json();
+      }
+     }).catch(function(err) {
+      alert(err);
+    });
   }
 
   function moveItemUpInList(button) {
@@ -144,12 +163,12 @@
     }
   }
 
-  function populateList(plates = [], platesList) {
-    platesList.innerHTML = plates.map((plate, i) => {
+  function populateList(items = [], itemsList) {
+    itemsList.innerHTML = items.map((item, i) => {
       return `
         <li>
-          <input type="checkbox" data-index=${i} id="item${i}" ${plate.done ? 'checked' : ''} />
-          <label for="item${i}">${plate.text}</label>
+          <input type="checkbox" data-index=${i} id="item${i}" ${item.done ? 'checked' : ''} />
+          <label for="item${i}">${item.text}</label>
           <input type="button" data-index=${i} onclick=moveItemUpInList(this) value="Up">
           <input type="button" data-index=${i} onclick=moveItemDownInList(this) value="Down">
         </li>
@@ -169,7 +188,7 @@
   addItems.addEventListener('submit', addItemFromField);
   removeItemsButton.addEventListener('click', removeItemsFromList);
   doneShoppingButton.addEventListener('click', doneShopping);
-  submitToDBButton.addEventListener('click', submitToDB);
+  submitToDBButton.addEventListener('click', saveToDB);
   itemsList.addEventListener('click', toggleDone);
 
 </script>
