@@ -1,69 +1,69 @@
 
-    html {
-      box-sizing: border-box;
-      min-height:100vh;
-      text-align: center;
-      font-family: Futura,"Trebuchet MS",Arial,sans-serif
-    }
-    *, *:before, *:after {box-sizing: inherit; }
+html {
+    box-sizing: border-box;
+    min-height:100vh;
+    text-align: center;
+    font-family: Futura,"Trebuchet MS",Arial,sans-serif
+}
+*, *:before, *:after {box-sizing: inherit; }
 
-    .wrapper {
-      padding: 20px;
-      /* max-width: 700px; */
-      background: rgba(255,255,255,0.95);
-      box-shadow: 0 0 0 10px rgba(0,0,0,0.1);
-    }
+.wrapper {
+    padding: 20px;
+    /* max-width: 700px; */
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 0 0 10px rgba(0,0,0,0.1);
+}
 
-    h2 {
-      text-align: center;
-      margin: 0;
-      font-weight: 200;
-    }
+h2 {
+    text-align: center;
+    margin: 0;
+    font-weight: 200;
+}
 
-    .items {
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      list-style: none;
-    }
+.items {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    list-style: none;
+}
 
-    .items li {
-      border-bottom: 1px solid rgba(0,0,0,0.2);
-      padding: 10px 0;
-      font-weight: bold;
-      font-size: 22pt;
-      display: flex;
-    }
+.items li {
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    padding: 10px 0;
+    font-weight: bold;
+    font-size: 22pt;
+    display: flex;
+}
 
-    .items label {
-      flex:1;
-      cursor: pointer;
-    }
+.items label {
+    flex:1;
+    cursor: pointer;
+}
 
-    .items input:checked + label {
-      text-decoration: line-through;
-    }
+.plates input:checked + label {
+    text-decoration: line-through;
+}
 
-    input[type=checkbox] {
-      transform: scale(3.5);
-    }
+input[type=checkbox] {
+    transform: scale(3.5);
+}
 
-    .remove-items, .done-shopping, .submit-to-db, .add-items input, input[type=button] {
-      padding:10px;
-      outline:0;
-      font-size: 22pt;
-      border:1px solid rgba(0,0,0,0.1);
-    }
+.remove-items, .done-shopping, .submit-to-db, .add-items input, input[type=button] {
+    padding:10px;
+    outline:0;
+    font-size: 22pt;
+    border:1px solid rgba(0,0,0,0.1);
+}
 
-    .remove-items:active, .done-shopping:active, .submit-to-db:active,
-    .add-items input:active, input[type=button]:active {
-      font-weight: bold;
-    }
+.remove-items:active, .done-shopping:active, .submit-to-db:active,
+.add-items input:active, input[type=button]:active {
+    font-weight: bold;
+}
 
-    /*I think there might be a better way to organize this,
-    but I want only remove items to have margin top
-    or else the gap between the two is huge.*/
+/*I think there might be a better way to organize this,
+  but I want only remove items to have margin top
+  or else the gap between the two is huge.*/
 
-    .add-items, .remove-items{
-      margin-top: 20px;
-    }
+.add-items, .remove-items{
+    margin-top: 20px;
+}

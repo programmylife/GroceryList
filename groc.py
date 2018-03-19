@@ -10,6 +10,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+TABLE_NAME = 'GroceryList'
+
 def initialize_db():
     client = boto3.client('dynamodb', region_name='us-east-1')
     return client
@@ -64,7 +66,7 @@ def get_list(id):
     response = client.query(
         #IndexName='list',
         Select='ALL_ATTRIBUTES',
-        TableName='GroceryList',
+        TableName=TABLE_NAME,
         KeyConditionExpression='GUID = :v1',
         ExpressionAttributeValues={
             ':v1': {
@@ -77,7 +79,7 @@ def get_list(id):
 #put a new list into the DB
 def create_new_list(client, id, items, shop_date):
     response = client.put_item(
-        TableName='GroceryList',
+        TableName=TABLE_NAME,
         Item={
             'GUID': {
                 'S': id
@@ -113,7 +115,7 @@ def update_list(client, items):
                 'S': 'null'
             },
         },
-        TableName='GroceryList',
+        TableName=TABLE_NAME,
         ExpressionAttributeNames={
             '#L': 'list'
         },
@@ -123,3 +125,5 @@ def update_list(client, items):
 
     return response
 
+#if __name__ == '__main__':
+ #   app.run(host='0.0.0.0', port=5000, debug=True)
