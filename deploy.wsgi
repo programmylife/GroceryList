@@ -6,7 +6,7 @@ import site
 site.addsitedir(os.path.join(os.path.dirname(__file__), 'groc_env/local/lib/python2.7/site-packages'))
  
 # Path of execution
-sys.path.append('/var/www/groc_flask_app')
+sys.path.append('/var/www/GroceryList')
  
 # Fired up virtualenv before include application
 activate_env = os.path.expanduser(os.path.join(os.path.dirname(__file__), 'groc_env/bin/activate_this.py'))
