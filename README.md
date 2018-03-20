@@ -2,6 +2,17 @@ Simple grocery list web app using Flask+DynamoDB for the backend. Hosted on AWS.
 
 Front end code is heavily modified from a lesson in [Javascript 30](https://courses.wesbos.com/account/access/5863d196661bae5f4999b00f/view/e3ba3f1664). It is simple HTML+CSS+JS and works on mobile and desktop browsers.
 
+# Usage
+
+* Use the text box to add items to the list. 
+* Click the check box and 'Remove Checked Items' to remove items.
+* Click 'Done Shopping' to save the list and start a new list with the same items.
+* The application saves to the database every time an item is added or removed. The 'Save To Database' button is only needed in case the database was not updated when an item was added or removed (if for example, the user was briefly offline).
+* The 'Up' and 'Down' buttons move the respective up and down the list by one place.
+
+
+# Setup
+
 In addition to the code in this repository, you will also need to set up some other services to get the application working:
 
 * Install and set up your virtual environment. I am currently using virtualenv and have included the requirements.txt file.
